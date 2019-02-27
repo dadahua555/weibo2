@@ -34,7 +34,7 @@ class FilePipeline(object):
 
 
 class MongoPipeline(object):
-    collection = 'midea'  #mongo数据库的collection名字，随便
+    collection = 'article'  #mongo数据库的collection名字，随便
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri

@@ -14,9 +14,14 @@ class WeiboItem(scrapy.Item):
     #support = scrapy.Field()
     #retweet = scrapy.Field()
     #comment = scrapy.Field()
+    article_news = scrapy.Field()
+    platform = scrapy.Field()
+    title = scrapy.Field()
     content = scrapy.Field()
-    support_number = scrapy.Field()
-    transpond_number = scrapy.Field()
-    comment_number = scrapy.Field()
     date = scrapy.Field()
+    support_number = scrapy.Field()
+    share_number = scrapy.Field()
+    keyword = scrapy.Field()
+
+
 

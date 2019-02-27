@@ -1,48 +1,44 @@
 # encoding: utf-8
 
 import scrapy
+import time
 from scrapy.http import Request
-from scrapy.selector import Selector
 from weibo.items import WeiboItem   #新添加
+from weibo.keywords import keyword
+from scrapy.selector import Selector
 
 class Weibo_Spider(scrapy.Spider):
 
     name = "weibo"
     #allowed_domains = ["weibo.cn/"]
     start_urls = [
-            'https://weibo.cn/midea'
+            'https://s.weibo.com/article'
     ]
+
     def start_requests(self):
-        yield Request('https://weibo.cn/mideabingxiang', cookies={"SCF": "Aksmea4EpLAdD2xfueYpin7kakm0e8nDiUVPl5i7VzU9LMVIFvi9FyL3Xh4t7xHm4cR0xBSeQtlpwLQgzBZKsCo.", "SSOLoginState": "1551150521", "SUB": "_2A25xcN3pDeRhGeRJ6lQS9yzFyj2IHXVSmuOhrDV6PUJbkdANLVD4kW1NUnmjmxepssTwVKyxtdKj5Wc4jBpHzms_", "SUHB": "0id60pWmsuOZ8g"}, callback=self.parse)
+        for key_word in keyword:
+            url = 'https://s.weibo.com/article?q=' + key_word
+            yield Request(url, callback=self.parse_page, meta={'art': '文章', 'keyword': key_word}, dont_filter=True)
 
-
-    def parse(self, response):
-        #item = WeiboItem()    #新添加
-        #item['content'] = response.xpath('//span[@class="ctt"]/text()').extract()
-        #yield item
-        weibo_item = WeiboItem()
+    def parse_page(self, response):
+        item = WeiboItem()  # 新添加
         selector = Selector(response)
-        wbs = selector.xpath("//div[@class='c']") # get all elements which class name is 'c'
-        for i in range(len(wbs) - 2):
-            divs = wbs[i].xpath('./div')
-            weibo_item['content'] = divs[0].xpath('./span[@class="ctt"]/text()').extract()
-            if len(divs) == 1:
-                a = divs[0].xpath('./a')
-                if len(a) > 0:
-                    for j in range(len(a)):
-                        weibo_item['support_number'] = a[-4].xpath('./text()').extract()
-                        weibo_item['transpond_number'] = a[-3].xpath('./text()').extract()
-                        weibo_item['comment_number'] = a[-2].xpath('./text()').extract()
-                weibo_item['date'] = divs[0].xpath('./span[@class="ct"]/text()').extract()
-            if len(divs) == 2:
-                a = divs[1].xpath('./a')
-                if len(a) > 0:
-                    for j in range(len(a)):
-                        weibo_item['support_number'] = a[-4].xpath('./text()').extract()
-                        weibo_item['transpond_number'] = a[-3].xpath('./text()').extract()
-                        weibo_item['comment_number'] = a[-2].xpath('./text()').extract()
-                weibo_item['date'] = divs[1].xpath('./span[@class="ct"]/text()').extract()
-            yield weibo_item
-#        if selector.xpath('//*[@id="pagelist"]/form/div/a/text()').extract()[0] == u'下页':
-#            next_href = selector.xpath('//*[@id="pagelist"]/form/div/a/@href').extract()[0]
-#            yield Request('https://weibo.cn' + next_href, callback=self.parse)
+        article = selector.xpath("//div[@class='card-wrap']")
+        for i in range(len(article)):
+
+            item['article_news'] = response.meta['art']
+            item['keyword'] = response.meta['keyword']
+            item['title'] = article[i].xpath('//h3/a/text()').extract()[0]
+            item['content'] = article[i].xpath('//h3/a/@href').extract()[0]
+            #item['platform'] = article[i].xpath('//div]')[0].xpath('/a')[0].xpath('text()').extract()[0]
+            #item['date'] = article[i].xpath('//div[@class="act"]/div/span')[1].xpath('text()').extract()[0]
+            s_info = article[i].xpath('//div[@class="act"]/ul[@class="s-fr"]/li')
+            #item['share_number'] = s_info[1].xpath('/a/text()').extract()[0]
+            #if len(s_info) == 1:
+            #    item['support_number'] = '0'
+            #else:
+            #    item['support_number'] = s_info[0].xpath('/a/text()').extract()[0]
+            yield item
+
+
+
