@@ -7,6 +7,12 @@
 import io
 import json
 import pymongo
+import sys
+
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 
 class WeiboPipeline(object):
     def __init__(self):
