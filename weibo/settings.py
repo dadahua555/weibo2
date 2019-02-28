@@ -52,7 +52,7 @@ DEFAULT_REQUEST_HEADERS = {
 #新修改
 ITEM_PIPELINES = {      
  #   'weibo.pipelines.FilePipeline': 300,    #实现保存到txt文件
-#  'weibo.pipelines.MongoPipeline': 400,     #实现保存到mongo数据库
+  'weibo.pipelines.MongoPipeline': 400,     #实现保存到mongo数据库
      'weibo.pipelines.WeiboPipeline': 300,
 }
 
