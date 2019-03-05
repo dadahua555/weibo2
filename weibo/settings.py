@@ -15,8 +15,9 @@ SPIDER_MODULES = ['weibo.spiders']
 NEWSPIDER_MODULE = 'weibo.spiders'
 
 
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'weibo (+http://www.yourdomain.com)'
+#USER_AGENT = random.choice(agents)
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -27,13 +28,13 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 4
+DOWNLOAD_DELAY = 5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -52,12 +53,12 @@ DEFAULT_REQUEST_HEADERS = {
 #新修改
 ITEM_PIPELINES = {      
  #   'weibo.pipelines.FilePipeline': 300,    #实现保存到txt文件
-  'weibo.pipelines.MongoPipeline': 400,     #实现保存到mongo数据库
+ # 'weibo.pipelines.MongoPipeline': 400,     #实现保存到mongo数据库
      'weibo.pipelines.WeiboPipeline': 300,
 }
 
-MONGO_URI = 'mongodb://localhost:27017'
-#MONGO_URI = '116.56.140.95:27017'
+#MONGO_URI = 'mongodb://localhost:27017'
+MONGO_URI = '116.56.140.95:27017'
 MONGO_DB = "weibo"
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
@@ -67,9 +68,9 @@ MONGO_DB = "weibo"
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'weibo.middlewares.WeiboDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'weibo.middlewares.UserAgentMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html

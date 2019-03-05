@@ -19,7 +19,7 @@ class BloomFilter():
     def __init__(self):
         self.bit_size = 1 << 25
         self.seeds = [5, 7, 11, 13, 31, 37, 61]
-        self.r = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
+        self.r = redis.StrictRedis(host='116.56.140.95', port=6379, db=4)
         self.hashFunc = []
         for i in range(self.seeds.__len__()):
             self.hashFunc.append(SimpleHash(self.bit_size, self.seeds[i]))
